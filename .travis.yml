@@ -10,7 +10,7 @@ os: linux
 
 # Distribución del sistema operativo
 
-dist: trusty
+dist: xenial
 
 # Requerimiento de permisos en Linux
 
@@ -48,12 +48,12 @@ install:
 
 # Instalar OpenCV
 
-  - sudo pip3 install opencv-python
+  - sudo pip install opencv-python
 
 
 # Instalar deepFace
 
-  - sudo pip3 install deepface
+  - sudo pip install deepface
 
 # Tareas a ejecutar antes de nuestra prueba
 
