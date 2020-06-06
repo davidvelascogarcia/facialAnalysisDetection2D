@@ -47,6 +47,26 @@ pip3 install deepface
 **NOTE:**
 This module use `Tensorflow` backend.
 
+**Possible errors:**
+`deepFace` requires `Python 3.5.5` but `Ubuntu 16.04` use `Python 3.5.2` by default. You can add `Python 3.6` with PPA repository like:
+
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.6
+```
+
+You can install the package with:
+
+```bash
+python3.6 -m pip install deepface
+```
+If `pip` change the link to `Python 3.6` by default, you can revert to link `pip` to `Python 3.5` with:
+
+```bash
+python3 -m pip install --upgrade --force pip
+```
+
 Tested on: `ubuntu 14.04`, `ubuntu 16.04`, `ubuntu 18.04`, `lubuntu 18.04` and `raspbian`.
 
 
