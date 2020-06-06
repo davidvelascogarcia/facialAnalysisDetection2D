@@ -52,7 +52,7 @@ install:
 
 # Instalar deepFace
 
-  - sudo python3 -m pip install deepface
+  - sudo python -m pip install deepface
 
 # Tareas a ejecutar antes de nuestra prueba
 
