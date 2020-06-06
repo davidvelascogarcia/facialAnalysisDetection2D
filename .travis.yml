@@ -48,8 +48,7 @@ install:
 
 # Instalar OpenCV
 
-  - sudo pip3 install opencv-python
-
+  - sudo pip install opencv-python
 
 # Instalar deepFace
 
