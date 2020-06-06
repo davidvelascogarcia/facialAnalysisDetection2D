@@ -48,11 +48,11 @@ install:
 
 # Instalar OpenCV
 
-  - sudo pip install opencv-python
+  - pip install opencv-python
 
 # Instalar deepFace
 
-  - sudo python -m pip install deepface
+  - python -m pip install deepface
 
 # Tareas a ejecutar antes de nuestra prueba
 
