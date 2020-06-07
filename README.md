@@ -55,6 +55,11 @@ sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt-get install python3.6
 ```
+To install `pip` in `Python 3.6`:
+
+```bash
+curl https://bootstrap.pypa.io/get-pip.py | sudo python3.6
+```
 
 You can install the package with:
 
