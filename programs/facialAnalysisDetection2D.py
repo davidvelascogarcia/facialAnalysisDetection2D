@@ -80,10 +80,7 @@ facialAnalysisDetection2D_portNameOutDet = '/facialAnalysisDetection2D/data:o'
 facialAnalysisDetection2D_portOutDet.open(facialAnalysisDetection2D_portNameOutDet)
 
 # Create data bootle
-cmd=yarp.Bottle()
-
-# Create coordinates bootle
-coordinates=yarp.Bottle()
+outputBottleFacialAnalysisDetection2D = yarp.Bottle()
 
 # Image size
 image_w = 640
@@ -169,12 +166,19 @@ while int(loopControlReadImage) == 0:
 
     # Analyzing frame
     facialAnalysisDetection2DResults = DeepFace.analyze(rgb_frame, models=models)
+    print(facialAnalysisDetection2DResults)
     print("")
     print("[INFO] Image source analysis done correctly.")
     print("")
 
     # Get time Detection
     timeDetection = datetime.datetime.now()
+
+    # Extracted analysis detection
+    genderDetection = facialAnalysisDetection2DResults["gender"]
+    ageDetection = facialAnalysisDetection2DResults["age"]
+    dominantRaceDetection = facialAnalysisDetection2DResults["dominant_race"]
+    dominantEmotionDetection = facialAnalysisDetection2DResults["dominant_emotion"]
 
 
     # Print processed data
@@ -184,32 +188,32 @@ while int(loopControlReadImage) == 0:
     print("**************************************************************************")
     print("")
     print("[RESULTS] Facial analysis results:")
-    print("Gender: ", facialAnalysisDetection2DResults["gender"])
-    print("Age: ", facialAnalysisDetection2DResults["age"])
-    print("Race: ", facialAnalysisDetection2DResults["dominant_race"])
-    print("Emotion: ", facialAnalysisDetection2DResults["dominant_emotion"])
+    print("Gender: ", genderDetection)
+    print("Age: ", ageDetection)
+    print("Race: ", dominantRaceDetection)
+    print("Emotion: ", dominantEmotionDetection)
     print("[INFO] Detection time: "+ str(timeDetection))
 
     # Text to show in the image
-    imageText = "G: " + str(facialAnalysisDetection2DResults["gender"]) + ", A: " + str(int(facialAnalysisDetection2DResults["age"])) + ", R: " + str(facialAnalysisDetection2DResults["dominant_race"]) + ", E: " + str(facialAnalysisDetection2DResults["dominant_emotion"])
+    imageText = "G: " + str(genderDetection) + ", A: " + str(int(ageDetection)) + ", R: " + str(dominantRaceDetection) + ", E: " + str(dominantEmotionDetection)
 
     # Write processed data in the frame
     in_buf_array = cv2.rectangle(in_buf_array, (50, 50), (600, 420), (36,255,12), 1)
     cv2.putText(in_buf_array, imageText, (50, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
 
     # Sending processed detection
-    cmd.clear()
-    cmd.addString("Gender:")
-    cmd.addString(str(facialAnalysisDetection2DResults["gender"]))
-    cmd.addString("Age:")
-    cmd.addString(str(facialAnalysisDetection2DResults["age"]))
-    cmd.addString("Race:")
-    cmd.addString(str(facialAnalysisDetection2DResults["dominant_race"]))
-    cmd.addString("Emotion:")
-    cmd.addString(str(facialAnalysisDetection2DResults["dominant_emotion"]))
-    cmd.addString("Time:")
-    cmd.addString(str(timeDetection))
-    facialAnalysisDetection2D_portOutDet.write(cmd)
+    outputBottleFacialAnalysisDetection2D.clear()
+    outputBottleFacialAnalysisDetection2D.addString("Gender:")
+    outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["gender"]))
+    outputBottleFacialAnalysisDetection2D.addString("Age:")
+    outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["age"]))
+    outputBottleFacialAnalysisDetection2D.addString("Race:")
+    outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["dominant_race"]))
+    outputBottleFacialAnalysisDetection2D.addString("Emotion:")
+    outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["dominant_emotion"]))
+    outputBottleFacialAnalysisDetection2D.addString("Time:")
+    outputBottleFacialAnalysisDetection2D.addString(str(timeDetection))
+    facialAnalysisDetection2D_portOutDet.write(outputBottleFacialAnalysisDetection2D)
 
     # Sending processed image
     print("")
