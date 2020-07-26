@@ -37,44 +37,46 @@ print("*************************************************************************
 
 print("")
 print("Starting system ...")
+print("")
 
 print("")
 print("Loading facialAnalysisDetection2D module ...")
-
-
 print("")
+
 print("")
 print("**************************************************************************")
 print("YARP configuration:")
 print("**************************************************************************")
 print("")
-print("")
 print("Initializing YARP network ...")
+print("")
 
 # Init YARP Network
 yarp.Network.init()
 
-
 print("")
 print("[INFO] Opening image input port with name /facialAnalysisDetection2D/img:i ...")
+print("")
 
-# Open input image port
+# Open facialAnalysisDetection2D input image port
 facialAnalysisDetection2D_portIn = yarp.BufferedPortImageRgb()
 facialAnalysisDetection2D_portNameIn = '/facialAnalysisDetection2D/img:i'
 facialAnalysisDetection2D_portIn.open(facialAnalysisDetection2D_portNameIn)
 
 print("")
 print("[INFO] Opening image output port with name /facialAnalysisDetection2D/img:o ...")
+print("")
 
-# Open output image port
+# Open facialAnalysisDetection2D output image port
 facialAnalysisDetection2D_portOut = yarp.Port()
 facialAnalysisDetection2D_portNameOut = '/facialAnalysisDetection2D/img:o'
 facialAnalysisDetection2D_portOut.open(facialAnalysisDetection2D_portNameOut)
 
 print("")
 print("[INFO] Opening data output port with name /facialAnalysisDetection2D/data:o ...")
+print("")
 
-# Open output data port
+# Open facialAnalysisDetection2D output data port
 facialAnalysisDetection2D_portOutDet = yarp.Port()
 facialAnalysisDetection2D_portNameOutDet = '/facialAnalysisDetection2D/data:o'
 facialAnalysisDetection2D_portOutDet.open(facialAnalysisDetection2D_portNameOutDet)
@@ -98,15 +100,16 @@ out_buf_image.resize(image_w, image_h)
 out_buf_array = np.zeros((image_h, image_w, 3), np.uint8)
 out_buf_image.setExternal(out_buf_array.data, out_buf_array.shape[1], out_buf_array.shape[0])
 
-
 print("")
+print("[INFO] YARP network configured correctly.")
+print("")
+
 print("")
 print("**************************************************************************")
 print("Loading models:")
 print("**************************************************************************")
 print("")
-print("")
-print("Loading models ...")
+print("[INFO] Loading models at " + str(datetime.datetime.now()) + " ...")
 print("")
 
 # Load models
@@ -120,32 +123,29 @@ print("")
 print("[INFO] Models loaded correctly.")
 print("")
 
-
-print("")
-print("")
-print("**************************************************************************")
-print("Waiting for input image source:")
-print("**************************************************************************")
-print("")
-print("")
-print("Waiting input image source ...")
-print("")
-
 # Control loop
 loopControlReadImage = 0
 
 while int(loopControlReadImage) == 0:
 
+    print("")
+    print("**************************************************************************")
+    print("Waiting for input image source:")
+    print("**************************************************************************")
+    print("")
+    print("[INFO] Waiting input image source at " + str(datetime.datetime.now()) + " ...")
+    print("")
+
     # Recieve image source
     frame = facialAnalysisDetection2D_portIn.read()
 
     print("")
-    print("")
     print("**************************************************************************")
-    print("Processing:")
+    print("Processing input image data:")
     print("**************************************************************************")
     print("")
-    print("Processing data ...")
+    print("[INFO] Processing input image data at " + str(datetime.datetime.now()) + " ...")
+    print("")
 
     # Buffer processed image
     in_buf_image.copy(frame)
@@ -154,25 +154,21 @@ while int(loopControlReadImage) == 0:
     # YARP -> OpenCV
     rgb_frame = in_buf_array[:, :, ::-1]
 
-
-    print("")
     print("")
     print("**************************************************************************")
     print("Analyzing image source:")
     print("**************************************************************************")
     print("")
-    print("Analyzing image source ...")
+    print("[INFO] Analyzing image source at " + str(datetime.datetime.now()) + " ...")
     print("")
 
     # Analyzing frame
     facialAnalysisDetection2DResults = DeepFace.analyze(rgb_frame, models=models)
     print(facialAnalysisDetection2DResults)
+
     print("")
     print("[INFO] Image source analysis done correctly.")
     print("")
-
-    # Get time Detection
-    timeDetection = datetime.datetime.now()
 
     # Extracted analysis detection
     genderDetection = facialAnalysisDetection2DResults["gender"]
@@ -184,15 +180,17 @@ while int(loopControlReadImage) == 0:
     # Print processed data
     print("")
     print("**************************************************************************")
-    print("Results resume:")
+    print("Resume results:")
     print("**************************************************************************")
     print("")
     print("[RESULTS] Facial analysis results:")
-    print("Gender: ", genderDetection)
-    print("Age: ", ageDetection)
-    print("Race: ", dominantRaceDetection)
-    print("Emotion: ", dominantEmotionDetection)
-    print("[INFO] Detection time: "+ str(timeDetection))
+    print("")
+    print("[GENDER] Gender: " + str(genderDetection))
+    print("[AGE] Age: " + str(ageDetection))
+    print("[RACE] Race: " + str(dominantRaceDetection))
+    print("[EMOTION] Emotion: " + str(dominantEmotionDetection))
+    print("[DATE] Detection time: " + str(datetime.datetime.now()))
+    print("")
 
     # Text to show in the image
     imageText = "G: " + str(genderDetection) + ", A: " + str(int(ageDetection)) + ", R: " + str(dominantRaceDetection) + ", E: " + str(dominantEmotionDetection)
@@ -203,21 +201,21 @@ while int(loopControlReadImage) == 0:
 
     # Sending processed detection
     outputBottleFacialAnalysisDetection2D.clear()
-    outputBottleFacialAnalysisDetection2D.addString("Gender:")
+    outputBottleFacialAnalysisDetection2D.addString("GENDER:")
     outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["gender"]))
-    outputBottleFacialAnalysisDetection2D.addString("Age:")
+    outputBottleFacialAnalysisDetection2D.addString("AGE:")
     outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["age"]))
-    outputBottleFacialAnalysisDetection2D.addString("Race:")
+    outputBottleFacialAnalysisDetection2D.addString("RACE:")
     outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["dominant_race"]))
-    outputBottleFacialAnalysisDetection2D.addString("Emotion:")
+    outputBottleFacialAnalysisDetection2D.addString("EMOTION:")
     outputBottleFacialAnalysisDetection2D.addString(str(facialAnalysisDetection2DResults["dominant_emotion"]))
-    outputBottleFacialAnalysisDetection2D.addString("Time:")
-    outputBottleFacialAnalysisDetection2D.addString(str(timeDetection))
+    outputBottleFacialAnalysisDetection2D.addString("DATE:")
+    outputBottleFacialAnalysisDetection2D.addString(str(datetime.datetime.now()))
     facialAnalysisDetection2D_portOutDet.write(outputBottleFacialAnalysisDetection2D)
 
     # Sending processed image
     print("")
-    print("[INFO] Sending processed image ...")
+    print("[INFO] Sending processed image at " + str(datetime.datetime.now()) + " ...")
     print("")
     out_buf_array[:,:] = in_buf_array
     facialAnalysisDetection2D_portOut.write(out_buf_image)
